@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { cormorant, manrope } from "@/lib/fonts";
 import "./globals.css";
 
@@ -19,12 +20,12 @@ export default function GlobalNotFound() {
           <h1 className="display text-5xl md:text-7xl">Ce moment n&apos;existe pas</h1>
           <p className="mt-4 font-serif text-2xl italic text-ivory/50">This moment does not exist</p>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <a href="/fr" className="bg-gold px-8 py-4 text-[0.72rem] uppercase tracking-[0.28em] text-ink transition-colors hover:bg-gold-soft">
+            <Link href="" className="bg-gold px-8 py-4 text-[0.72rem] uppercase tracking-[0.28em] text-ink transition-colors hover:bg-gold-soft">
               Accueil
-            </a>
-            <a href="/en" className="border border-gold/50 px-8 py-4 text-[0.72rem] uppercase tracking-[0.28em] text-ivory transition-colors hover:border-gold">
+            </Link>
+            <Link href="" className="border border-gold/50 px-8 py-4 text-[0.72rem] uppercase tracking-[0.28em] text-ivory transition-colors hover:border-gold">
               Home
-            </a>
+            </Link>
           </div>
         </main>
       </body>

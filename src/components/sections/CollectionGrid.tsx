@@ -66,8 +66,8 @@ export function CollectionGrid() {
   return (
     <div>
       <div className="sticky top-0 z-30 -mx-4 border-y border-line bg-ink/85 px-4 py-5 backdrop-blur-xl md:mx-0 md:px-0">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:gap-10">
+        <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-5">
+          <div className="flex min-w-0 max-w-full flex-col gap-4 lg:flex-row lg:items-center lg:gap-10">
             <fieldset className="flex items-center gap-3 overflow-x-auto pb-1 xl:pb-0">
               <legend className="sr-only">{t("filterCollection")}</legend>
               <span className="mr-1 shrink-0 text-[0.62rem] uppercase tracking-[0.25em] text-stone">{t("filterCollection")}</span>

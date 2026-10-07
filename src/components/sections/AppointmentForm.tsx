@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AnimatePresence, motion } from "motion/react";
@@ -82,7 +82,7 @@ export function AppointmentForm() {
     register,
     handleSubmit,
     trigger,
-    watch: watchValue,
+    control,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
@@ -110,8 +110,8 @@ export function AppointmentForm() {
     setSent({ name: values.firstName, city: tr(b.city, locale) });
   };
 
-  const selectedReason = watchValue("reason");
-  const selectedTime = watchValue("time");
+  const selectedReason = useWatch({ control, name: "reason" });
+  const selectedTime = useWatch({ control, name: "time" });
   const steps = [t("step1"), t("step2"), t("step3")];
 
   if (sent) {

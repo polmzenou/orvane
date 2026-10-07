@@ -8,8 +8,16 @@ import { boutiques } from "@/data/content";
 import { cn, tr } from "@/lib/utils";
 
 const W = 1000;
-const H = 500;
-const project = (lat: number, lon: number) => ({ x: ((lon + 180) / 360) * W, y: ((90 - lat) / 180) * H });
+const H = 520;
+// Cropped equirectangular frame around the salons (lon -95..155, lat 66..-12).
+const LON0 = -95;
+const LON1 = 155;
+const LAT0 = 66;
+const LAT1 = -12;
+const project = (lat: number, lon: number) => ({
+  x: ((lon - LON0) / (LON1 - LON0)) * W,
+  y: ((LAT0 - lat) / (LAT0 - LAT1)) * H,
+});
 
 /** Constellation-style map: each salon is a star linked to Geneva. */
 export function BoutiqueExplorer() {
@@ -30,13 +38,16 @@ export function BoutiqueExplorer() {
               </radialGradient>
             </defs>
             {/* graticule */}
-            {Array.from({ length: 13 }).map((_, i) => (
-              <line key={`v${i}`} x1={(i * W) / 12} x2={(i * W) / 12} y1={0} y2={H} stroke="#2a2926" strokeWidth={0.6} />
+            {Array.from({ length: 11 }).map((_, i) => (
+              <line key={`v${i}`} x1={(i * W) / 10} x2={(i * W) / 10} y1={0} y2={H} stroke="#2a2926" strokeWidth={0.6} />
             ))}
             {Array.from({ length: 7 }).map((_, i) => (
               <line key={`h${i}`} y1={(i * H) / 6} y2={(i * H) / 6} x1={0} x2={W} stroke="#2a2926" strokeWidth={0.6} />
             ))}
-            <line x1={0} x2={W} y1={H / 2} y2={H / 2} stroke="#9c7c43" strokeOpacity={0.35} strokeDasharray="2 6" />
+            <line x1={0} x2={W} y1={project(0, 0).y} y2={project(0, 0).y} stroke="#9c7c43" strokeOpacity={0.4} strokeDasharray="2 6" />
+            <text x={8} y={project(0, 0).y - 8} fill="#9c7c43" fontSize={11} letterSpacing={3} opacity={0.6}>
+              0°
+            </text>
             {/* background stars */}
             {Array.from({ length: 140 }).map((_, i) => (
               <circle key={i} cx={(i * 373) % W} cy={(i * 197) % H} r={((i * 7) % 3) * 0.35 + 0.3} fill="#f3eee4" opacity={0.08 + ((i * 13) % 10) / 40} />
@@ -53,8 +64,8 @@ export function BoutiqueExplorer() {
                   d={`M${origin.x},${origin.y} Q${mx},${my} ${p.x},${p.y}`}
                   fill="none"
                   stroke={on ? "#e6d3a3" : "#c9a86a"}
-                  strokeOpacity={on ? 0.9 : 0.25}
-                  strokeWidth={on ? 1.4 : 0.8}
+                  strokeOpacity={on ? 1 : 0.4}
+                  strokeWidth={on ? 2 : 1}
                   initial={{ pathLength: 0 }}
                   whileInView={{ pathLength: 1 }}
                   viewport={{ once: true }}
@@ -67,30 +78,34 @@ export function BoutiqueExplorer() {
               const on = active === b.id;
               return (
                 <g key={b.id} className="cursor-pointer" onClick={() => setActive(b.id)}>
-                  <circle cx={p.x} cy={p.y} r={on ? 22 : 12} fill="url(#star-glow)" opacity={on ? 0.8 : 0.4} />
-                  <circle cx={p.x} cy={p.y} r={on ? 4.5 : 3} fill={b.flagship ? "#e6d3a3" : "#c9a86a"} />
+                  <circle cx={p.x} cy={p.y} r={on ? 30 : 16} fill="url(#star-glow)" opacity={on ? 0.8 : 0.45} />
+                  <circle cx={p.x} cy={p.y} r={on ? 6 : 4} fill={b.flagship ? "#e6d3a3" : "#c9a86a"} />
                   {on && (
                     <motion.circle
                       cx={p.x}
                       cy={p.y}
                       r={8}
                       fill="none"
+                      strokeWidth={1.5}
                       stroke="#e6d3a3"
                       initial={{ r: 4, opacity: 1 }}
-                      animate={{ r: 26, opacity: 0 }}
+                      animate={{ r: 36, opacity: 0 }}
                       transition={{ duration: 1.6, repeat: Infinity }}
                     />
                   )}
-                  <text
-                    x={p.x + 10}
-                    y={p.y - 10}
-                    fill={on ? "#f3eee4" : "#8a8580"}
-                    fontSize={on ? 15 : 11}
-                    fontFamily="var(--font-cormorant), serif"
-                    style={{ transition: "all .4s" }}
-                  >
-                    {tr(b.city, locale)}
-                  </text>
+                  <circle cx={p.x} cy={p.y} r={14} fill="transparent" />
+                  {(on || b.flagship) && (
+                    <text
+                      x={p.x + (p.x > W * 0.8 ? -14 : 14)}
+                      y={p.y - 14}
+                      textAnchor={p.x > W * 0.8 ? "end" : "start"}
+                      fill={on ? "#f3eee4" : "#8a8580"}
+                      fontSize={on ? 30 : 20}
+                      fontFamily="var(--font-cormorant), serif"
+                    >
+                      {tr(b.city, locale)}
+                    </text>
+                  )}
                 </g>
               );
             })}

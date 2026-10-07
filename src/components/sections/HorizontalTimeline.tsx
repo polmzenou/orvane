@@ -65,23 +65,23 @@ export function HorizontalTimeline({ eyebrow, title }: { eyebrow: string; title:
       </div>
       <div
         ref={track}
-        className="flex flex-col gap-16 px-4 py-16 sm:px-8 lg:h-full lg:w-max lg:flex-row lg:items-end lg:gap-24 lg:px-[8vw] lg:pb-24 lg:pt-0"
+        className="flex flex-col gap-16 px-4 py-16 sm:px-8 lg:h-full lg:w-max lg:flex-row lg:items-end lg:gap-20 lg:px-[8vw] lg:pb-16 lg:pt-56"
       >
         {timeline.map((item, i) => (
-          <article key={item.year} className="group relative lg:w-[32vw] lg:min-w-[380px]" style={{ marginBottom: i % 2 ? "6vh" : 0 }}>
-            <p data-year className="display text-[5.5rem] leading-none text-gold-gradient md:text-[8rem]">
+          <article key={item.year} className="group relative lg:w-[26vw] lg:min-w-[340px]" style={{ marginBottom: i % 2 ? "5vh" : 0 }}>
+            <p data-year className="display text-[5rem] leading-none text-gold-gradient md:text-[6.5rem]">
               {item.year}
             </p>
-            <div className="relative mt-6 aspect-[16/10] overflow-hidden">
+            <div className="relative mt-4 aspect-[16/9] overflow-hidden">
               <Image
                 src={img(item.image, 1000)}
                 alt=""
                 fill
-                sizes="(min-width: 1024px) 32vw, 100vw"
+                sizes="(min-width: 1024px) 26vw, 100vw"
                 className="object-cover grayscale-[40%] transition-all duration-[1.2s] group-hover:scale-105 group-hover:grayscale-0"
               />
             </div>
-            <h3 className="mt-6 font-serif text-2xl text-ivory md:text-3xl">{tr(item.title, locale)}</h3>
+            <h3 className="mt-5 font-serif text-2xl text-ivory md:text-3xl">{tr(item.title, locale)}</h3>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-ivory/60">{tr(item.text, locale)}</p>
           </article>
         ))}

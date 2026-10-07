@@ -52,15 +52,22 @@ export function LegalDocument({ doc }: { doc: LegalDoc }) {
 
   useEffect(() => {
     const els = doc.sections.map((s) => document.getElementById(s.id)).filter(Boolean) as HTMLElement[];
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) setActive(visible[0].target.id);
-      },
-      { rootMargin: "-20% 0px -65% 0px" },
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const line = window.innerHeight * 0.3;
+        let current = els[0]?.id;
+        for (const el of els) if (el.getBoundingClientRect().top <= line) current = el.id;
+        if (current) setActive(current);
+      });
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", update);
+    };
   }, [doc.sections]);
 
   return (

@@ -87,7 +87,10 @@ const GEARS: GearDef[] = [
 
 function Movement({ progress }: { progress?: MotionValue<number> }) {
   const root = useRef<THREE.Group>(null);
-  const layers = useRef<(THREE.Group | null)[]>([]);
+  const layer0 = useRef<THREE.Group>(null);
+  const layer1 = useRef<THREE.Group>(null);
+  const layer2 = useRef<THREE.Group>(null);
+  const layer3 = useRef<THREE.Group>(null);
   const gears = useRef<(THREE.Mesh | null)[]>([]);
   const balance = useRef<THREE.Group>(null);
   const rotor = useRef<THREE.Group>(null);
@@ -151,7 +154,7 @@ function Movement({ progress }: { progress?: MotionValue<number> }) {
   useFrame((state, delta) => {
     const p = progress ? progress.get() : (Math.sin(state.clock.elapsedTime * 0.4) + 1) / 2;
     const spread = THREE.MathUtils.smoothstep(p, 0.05, 0.85);
-    layers.current.forEach((l, i) => {
+    [layer0, layer1, layer2, layer3].forEach(({ current: l }, i) => {
       if (l) l.position.z = THREE.MathUtils.lerp(l.position.z, i * 0.06 + spread * i * 0.9, 0.12);
     });
     gears.current.forEach((g, i) => {
@@ -172,20 +175,16 @@ function Movement({ progress }: { progress?: MotionValue<number> }) {
     }
   });
 
-  const setLayer = (i: number) => (el: THREE.Group | null) => {
-    layers.current[i] = el;
-  };
-
   return (
     <group ref={root} scale={1.05}>
       {/* Layer 0: mainplate */}
-      <group ref={setLayer(0)}>
+      <group ref={layer0}>
         <mesh material={mats.plate} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[1.6, 1.6, 0.1, 96]} />
         </mesh>
       </group>
       {/* Layer 1: gear train */}
-      <group ref={setLayer(1)}>
+      <group ref={layer1}>
         {GEARS.map((g, i) => (
           <group key={i} position={[g.x, g.y, 0.1]}>
             <mesh
@@ -229,7 +228,7 @@ function Movement({ progress }: { progress?: MotionValue<number> }) {
         </group>
       </group>
       {/* Layer 2: bridges with jewels */}
-      <group ref={setLayer(2)}>
+      <group ref={layer2}>
         <mesh geometry={bridgeGeo} material={mats.steel} position={[0, 0, 0.18]} />
         <mesh geometry={trainBridgeGeo} material={mats.steel} position={[0, 0, 0.18]} />
         {[
@@ -252,7 +251,7 @@ function Movement({ progress }: { progress?: MotionValue<number> }) {
         </mesh>
       </group>
       {/* Layer 3: rotor */}
-      <group ref={setLayer(3)}>
+      <group ref={layer3}>
         <group ref={rotorWrap} scale={0.001}>
         <group ref={rotor} position={[0, 0, 0.42]}>
           <mesh geometry={rotorGeo} material={mats.gold} />

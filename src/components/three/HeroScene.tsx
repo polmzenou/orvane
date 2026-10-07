@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Float, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 import { SceneCanvas } from "./SceneCanvas";
@@ -12,6 +12,7 @@ import { watches } from "@/data/watches";
 function FloatingWatch() {
   const ref = useRef<THREE.Group>(null);
   const intro = useRef(0);
+  const narrow = useThree((s) => s.size.width < 768);
 
   useFrame((state, delta) => {
     if (!ref.current) return;
@@ -26,7 +27,7 @@ function FloatingWatch() {
   return (
     <group ref={ref}>
       <Float speed={1.2} rotationIntensity={0.25} floatIntensity={0.6}>
-        <WatchModel look={watches[0].look} scale={0.88} rotation={[0.1, 0, -0.18]} />
+        <WatchModel look={watches[0].look} scale={narrow ? 0.62 : 0.88} position={[0, narrow ? 0.55 : 0, 0]} rotation={[0.1, 0, -0.18]} />
       </Float>
     </group>
   );

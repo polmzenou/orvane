@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import "./globals.css";
 
 export default function GlobalError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
@@ -21,9 +22,9 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
             >
               Réessayer · Retry
             </button>
-            <a href="/" className="border border-gold/50 px-8 py-4 text-[0.72rem] uppercase tracking-[0.28em] text-ivory">
+            <Link href="" className="border border-gold/50 px-8 py-4 text-[0.72rem] uppercase tracking-[0.28em] text-ivory">
               Accueil · Home
-            </a>
+            </Link>
           </div>
         </main>
       </body>

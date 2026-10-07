@@ -51,9 +51,10 @@ export function Hero() {
         </svg>
       </div>
 
-      <motion.div className="absolute inset-0 lg:left-[38%]" style={{ y: sceneY, opacity: fade }}>
+      <motion.div className="absolute inset-x-0 top-0 h-[62svh] lg:inset-0 lg:left-[38%] lg:h-auto" style={{ y: sceneY, opacity: fade }}>
         <HeroScene />
       </motion.div>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[60svh] bg-gradient-to-t from-ink via-ink/90 to-transparent lg:hidden" />
 
       <motion.div
         style={{ y: textY, opacity: fade }}
